@@ -13,7 +13,7 @@ def list_books_in_library(library_name):
     """List all books in a library."""
     try:
         library = Library.objects.get(name=library_name)
-        books = library.book_set.all()  # Assuming a ForeignKey relationship between Book and Library
+        books = library.book.all()
         return books
     except Library.DoesNotExist:
         return None
