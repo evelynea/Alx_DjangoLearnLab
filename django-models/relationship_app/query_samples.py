@@ -13,7 +13,7 @@ def list_books_in_library(library_name):
     """List all books in a library."""
     try:
         library = Library.objects.get(name=library_name)
-        books = library.book.all()
+        books = library.books.all()
         return books
     except Library.DoesNotExist:
         return None
