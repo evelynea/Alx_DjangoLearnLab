@@ -9,10 +9,10 @@ def query_books_by_author(author_id):
     except Author.DoesNotExist:
         return None
 
-def list_books_in_library(library_id):
+def list_books_in_library(library_name):
     """List all books in a library."""
     try:
-        library = Library.objects.get(id=library_id)
+        library = Library.objects.get(name=library_name)
         books = library.book_set.all()  # Assuming a ForeignKey relationship between Book and Library
         return books
     except Library.DoesNotExist:
