@@ -48,13 +48,13 @@ def member_check(user):
     return user.userprofile.role == 'Member'
 
 @user_passes_test(admin_check)
-def admin_view(request):
+def Admin_view(request):
     return render(request, 'admin_view.html')
 
 @user_passes_test(librarian_check)
-def librarian_view(request):
+def Librarian_view(request):
     return render(request, 'librarian_view.html')
 
 @user_passes_test(member_check)
-def member_view(request):
+def Member_view(request):
     return render(request, 'member_view.html')
