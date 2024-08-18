@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth import login
+from django.contrib.auth.decorators import user_passes_test
 
 
 def list_books(request):
@@ -33,3 +34,27 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
+
+
+#role-based access control
+
+def admin_check(user):
+    return user.userprofile.role == 'Admin'
+
+def librarian_check(user):
+    return user.userprofile.role == 'Librarian'
+
+def member_check(user):
+    return user.userprofile.role == 'Member'
+
+@user_passes_test(admin_check)
+def admin_view(request):
+    return render(request, 'admin_view.html')
+
+@user_passes_test(librarian_check)
+def librarian_view(request):
+    return render(request, 'librarian_view.html')
+
+@user_passes_test(member_check)
+def member_view(request):
+    return render(request, 'member_view.html')
