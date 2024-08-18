@@ -49,12 +49,12 @@ def member_check(user):
 
 @user_passes_test(admin_check)
 def Admin_view(request):
-    return render(request, 'admin_view.html')
+    return render(request, 'relationship_app/admin_view.html')
 
 @user_passes_test(librarian_check)
 def Librarian_view(request):
-    return render(request, 'librarian_view.html')
+    return render(request, 'relationship_app/librarian_view.html')
 
 @user_passes_test(member_check)
 def Member_view(request):
-    return render(request, 'member_view.html')
+    return render(request, 'relationship_app/member_view.html')
