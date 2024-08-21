@@ -33,5 +33,4 @@ class CustomUserAdmin(BaseUserAdmin):
     ordering = ["email"]
     filter_horizontal = []
 
-admin.site.register (CustomUser, CustomUserAdmin)
-
+admin.site.register(CustomUser, CustomUserAdmin)
