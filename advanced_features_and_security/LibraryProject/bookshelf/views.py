@@ -1,7 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
+
+@permission_required('bookshelf.can_add_book', raise_exception=True)
+def add_book(request):
+    # View logic for adding a book
+    return render(request, 'bookshelf/add_book.html')
 
 @permission_required('bookshelf.can_view')
 def book_list(request):
