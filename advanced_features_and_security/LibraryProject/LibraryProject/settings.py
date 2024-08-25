@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-l4mr7#wf(rw72(si$2g(5y@$o(1jb=78cx2t6#(bean1f8r38k'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf',
-    'relationship_app'
+    'relationship_app',
+    'csp'
 ]
 
 MIDDLEWARE = [
@@ -49,8 +50,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
+CSP_SCRIPT_SRC = ("'self'", 'https://code.jquery.com')
 ROOT_URLCONF = 'LibraryProject.urls'
 
 TEMPLATES = [
@@ -125,3 +130,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+
+# Security settings that enables browser protection
+SECURE_BROWSER_XSS_FILTER = True  # Enables the X-XSS-Protection header in the HTTP response
+X_FRAME_OPTIONS = 'DENY'  # Prevents the site from being framed to avoid clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from guessing the MIME type
+
+# Ensure cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True  # Ensures the CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures the session cookie is only sent over HTTPS

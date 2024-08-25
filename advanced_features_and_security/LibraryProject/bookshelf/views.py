@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
+from .models import Book
 
 # Create your views here.
 
@@ -28,3 +29,11 @@ def book_edit(request, pk):
 def book_delete(request, pk):
     # View logic for deleting a book
     return render(request, 'bookshelf/book_confirm_delete.html')
+
+def search_books(request):
+    query = request.GET.get('q')
+    if query:
+        books = Book.objects.filter(title_icontains=query)
+    else:
+        books = Book.objects.all()
+    return render(request, 'bookshelf/book_list.html', {'books': books})
