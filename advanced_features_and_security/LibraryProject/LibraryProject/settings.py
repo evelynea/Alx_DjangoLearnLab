@@ -140,3 +140,12 @@ SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from guessing the MIM
 # Ensure cookies are only sent over HTTPS
 CSRF_COOKIE_SECURE = True  # Ensures the CSRF cookie is only sent over HTTPS
 SESSION_COOKIE_SECURE = True  # Ensures the session cookie is only sent over HTTPS
+
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow the site to be included in browsers' HSTS preload lists
