@@ -6,4 +6,5 @@ router = routers.DefaultRouter()
 router.register(r'books', BookViewSet, basename='book')
 urlpatterns = [
     path("api/books", BookList.as_view(), name="book_list_create"),
+    path('', include(router.urls))
 ]
