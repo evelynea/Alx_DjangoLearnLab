@@ -3,12 +3,15 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import generics, viewsets
 from .models import Book
-from .serializers import BookSerializers
+from .serializers import BookSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
-#class BookList (generics.ListAPIView):
- #   queryset = Book.objects.all()
-  #  serializer_class = BookSerializers
+class BookList (generics.ListAPIView):
+  queryset = Book.objects.all()
+  serializer_class = BookSerializer
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
-    serializer_class = BookSerializers
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]
