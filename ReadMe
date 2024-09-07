@@ -1,0 +1,19 @@
+to activate a virtual environment follow these steps
+# Windows
+ > python-m venv .venv
+ > Set-ExecutionPolicy-ExecutionPolicy RemoteSigned-Scope CurrentUser
+ # macOS
+ % python3-m venv .venv
+
+ to activate the virtual environment use:
+ > .venv\Scripts\Activate.ps1
+
+ to deactivate, use:
+ > deactivate
+
+
+To provide examples of how to use these query parameters in API requests, such as:
+ ### API Query Examples
+- **Filter by Title**: `/api/books/?title=The Great Gatsby`
+- **Search by Author**: `/api/books/?search=Fitzgerald`
+- **Order by Publication Year**: `/api/books/?ordering=-publication_year`
