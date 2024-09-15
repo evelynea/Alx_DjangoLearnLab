@@ -18,6 +18,9 @@ from django.urls import reverse_lazy
 from .models import Post, Comment
 from .forms import CommentForm
 
+from django.db.models import Q
+from taggit.models import Tag
+
 class LoginView(auth_views.LoginView):
     template_name = 'auth/login.html'
 
@@ -159,3 +162,24 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author  # Only allow the comment author to delete
+    
+
+
+def post_search(request):
+    query = request.GET.get('q')
+    posts = Post.objects.all()
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
+def posts_by_tag(request, tag_slug):
+    tag = get_object_or_404(Tag, slug=tag_slug)
+    posts = Post.objects.filter(tags__in=[tag])
+
+    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag})
