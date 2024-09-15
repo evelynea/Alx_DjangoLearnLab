@@ -165,7 +165,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     
 
 
-def Post_search(request):
+def post_search(request):
     query = request.GET.get('q')
     posts = Post.objects.all()
 
@@ -178,8 +178,16 @@ def Post_search(request):
 
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
 
-def PostsByTagListView(request, tag_slug):
-    tag = get_object_or_404(Tag, slug=tag_slug)
-    posts = Post.objects.filter(tags__in=[tag])
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list_by_tag.html'
+    context_object_name = 'posts'
 
-    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag})
+    def get_queryset(self):
+        tag = self.kwargs.get('tag')
+        return Post.objects.filter(tags__name__in=[tag])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.kwargs.get('tag')
+        return context
