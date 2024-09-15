@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,8 @@ from django.db import models
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from .models import Post
+from .models import Post, Comment
+from .forms import CommentForm
 
 class LoginView(auth_views.LoginView):
     template_name = 'auth/login.html'
@@ -66,7 +67,24 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
+    context_object_name ='post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_dat(**kwargs)
+        context['comments'] = Comment.objects.filter(post=self.object)  # Fetch comments related to the post
+        context['form'] = CommentForm()  # Initialize an empty form for adding comments
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = self.object
+            comment.author = request.user
+            comment.save()
+            return redirect('post_detail', pk=self.object.pk)
+        return self.get(request, *args, **kwargs)  # Re-render the page if form is invalid
 
 #CreateView - Allow authenticated users to creaet a post
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -105,3 +123,39 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+    
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comments/comment_form.html'
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        form.instance.post = post
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return redirect('post_detail', pk=self.kwargs['post_id'])  # Redirect back to the post after a successful comment
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'comment_edit.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author  # Ensure the user is the comment author
+    
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'comment_delete.html'
+    success_url = reverse_lazy('post_list')  # Redirect to the post list or post detail page after deletion
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author  # Only allow the comment author to delete
