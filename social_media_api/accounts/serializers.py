@@ -5,17 +5,8 @@ from rest_framework.authtoken.models import Token
 User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        write_only=True, 
-        required=True, 
-        style={'input_type': 'password'}
-    )
-    password2 = serializers.CharField(
-        write_only=True, 
-        required=True, 
-        label='Confirm Password', 
-        style={'input_type': 'password'}
-    )
+    password = serializers.CharField()
+    password2 = serializers.CharField()
     bio = serializers.CharField(required=False, allow_blank=True)
     profile_picture = serializers.ImageField(required=False, allow_null=True)
 
