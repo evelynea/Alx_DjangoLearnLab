@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Post, Comment
-from django.contrib.auth import get_user_model
+
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
@@ -8,7 +8,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('id', 'post', 'author', 'content', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'author', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'author', 'created_at', 'updated_at', 'comments')
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', 'author', 'title', 'content', 'created_at', 'updated_at', 'comments')
-        read_only_fields =('id', 'author', 'created_at', 'updated_at', 'comments')
+        read_only_fields =('id', 'author', 'created_at', 'updated_at', 'comments', 'content')
 
     def validate_title(self, value):
         if not value.strip():
