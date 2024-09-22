@@ -57,7 +57,7 @@ class LikePostView(generics.GenericAPIView):
         user = request.user
 
         # Check if the user has already liked the post
-        like, created = Like.objects.get_or_create(user=user, post=post)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:
             return Response({"detail": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
