@@ -1,1 +1,1 @@
-The beginning of learning Django
+ridiculous
